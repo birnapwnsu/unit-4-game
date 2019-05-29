@@ -4,33 +4,33 @@ $(document).ready(function() {
 const characters = {
     'yoda': {
         name: 'yoda',
-        health: 180,
+        health: 160,
         attack: 9, 
-        enemyCounter: 20,
+        enemyCounter: 22,
         imageUrl: "assets/images/yoda.jpg" 
     },
 
-    'darth_maul': {
-        name: 'darth_maul',
-        health: 120,
-        attack: 15, 
-        enemyCounter: 15, 
+    'darth maul': {
+        name: 'darth maul',
+        health: 150,
+        attack: 10, 
+        enemyCounter: 18, 
         imageUrl: "assets/images/darth_maul.jpg" 
     },
 
-    'boba_fett': {
-        name: 'boba_fett',
+    'boba fett': {
+        name: 'boba fett',
         health: 140,
-        attack: 14, 
-        enemyCounter: 15,
+        attack: 12, 
+        enemyCounter: 17,
         imageUrl: "assets/images/boba_fett.jpg"  
     },
 
-    'obi_wan_kenobi': {
-        name: 'obi_wan_kenobi',
-        health: 160,
-        attack: 20, 
-        enemyCounter: 25, 
+    'obi wan kenobi': {
+        name: 'obi wan kenobi',
+        health: 130,
+        attack: 13, 
+        enemyCounter: 27, 
         imageUrl: "assets/images/obi_wan_kenobi.jpg"  
     }
 };
@@ -39,8 +39,6 @@ const characters = {
 let currSelected;
 let currDefender;
 let combatants = [];
-let indexOfSel;
-let attackResult;
 let turnCounter = 1;
 let killCount = 0;
 
@@ -48,9 +46,9 @@ let killCount = 0;
 let renderOne = function(character, renderArea, makeChar) {
     let charDiv = $("<div class='character' data-name='" + character.name + "'>");
     let charName = $("<div class='character-name'>").text(character.name);
-    let charHealth = $("<div class='character-health'>").text(character.health);
     let charImage = $("<img alt='image' class='character-image'>").attr("src", character.imageUrl);
-    charDiv.append(charName).append(charHealth);
+    let charHealth = $("<div class='character-health'>").text(character.health);
+    charDiv.append(charName).append(charImage).append(charHealth);
     $(renderArea).append(charDiv);
     if (makeChar == 'enemy') {
         $(charDiv).addClass('enemy');
@@ -58,7 +56,7 @@ let renderOne = function(character, renderArea, makeChar) {
         currDefender = character;
         $(charDiv).addClass('target-enemy');
     }
-}
+};
 
 // Create function to render game message to DOM
 let renderMessage = function(message) {
@@ -71,6 +69,7 @@ let renderMessage = function(message) {
     }
 };
 
+let renderCharacters = function(charObj, areaRender) {
 //renders all characters
 if (areaRender == '#characters-section') {
     $(areaRender).empty();
@@ -86,15 +85,14 @@ if (areaRender == '#selected') {
     $('#selected').prepend("Your Character");       
     renderOne(charObj, areaRender, '');
     $('#attack-button').css('visibility', 'visible');
-  }
+}
 
 //render combatants
 if (areaRender == '#targets-section') {
     $('#targets-section').prepend("Choose Your Next Opponent");      
-  for (var i = 0; i < charObj.length; i++) {
-
-    renderOne(charObj[i], areaRender, 'enemy');
-  }
+    for (var i = 0; i < charObj.length; i++) {
+        renderOne(charObj[i], areaRender, 'enemy');
+}
 
 //render one enemy as defender
 $(document).on('click', '.enemy', function() {
@@ -136,18 +134,86 @@ if (areaRender == 'enemyDamage') {
 //render defeated enemy
 if (areaRender == 'enemyDefeated') {
     $('#defender').empty();
-    var gameStateMessage = "You have defated " + charObj.name + ", you can choose to fight another enemy.";
+   let gameStateMessage = "You have defated " + charObj.name + ", you can choose to fight another enemy.";
     renderMessage(gameStateMessage);
     }
+};
 
 //need to render characters for users to choose their character
+renderCharacters(characters, '#characters-section');
+$(document).on('click', '.character', function() {
+    name = $(this).data('name');
+
+  //if no player char has been selected
+    if (!currSelected) {
+    currSelected = characters[name];
+    for (var key in characters) {
+        if (key != name) {
+            combatants.push(characters[key]);
+        }
+    }
+$("#characters-section").hide();
+renderCharacters(currSelected, '#selected');
+
 //need to render characters for users to choose to fight against
-//need functions to allow actions between objects
-// -action done to defender reflected
-// -damage shown as result of combat
-// -win condition otherwise game continues
-
-//need a function restart the game
-
+renderCharacters(combatants, '#targets-section');
+}
 });
 
+//need functions to allow actions between objects
+$("#attack-button").on("click", function() {
+if ($('#defender').children().length !== 0) {
+
+// -action done to defender reflected
+    let attackMessage = "You attacked " + currDefender.name + " for " + (currSelected.attack * turnCounter) + " damage.";
+    renderMessage("clearMessage");
+
+// -damage shown as result of combat
+    currDefender.health = currDefender.health - (currSelected.attack * turnCounter);
+
+// -win condition otherwise game continues
+    if (currDefender.health > 0) {
+
+    //keep playing if enemy is not dead
+        renderCharacters(currDefender, 'playerDamage');
+
+    //player damage reflected
+        let counterAttackMessage = currDefender.name + " attacked you back for " + currDefender.enemyCounter + " damage.";
+        renderMessage(attackMessage);
+        renderMessage(counterAttackMessage);
+
+        currSelected.health = currSelected.health - currDefender.enemyCounter;
+        renderCharacters(currSelected, 'enemyDamage');
+    if (currSelected.health <= 0) {
+        renderMessage("clearMessage");
+        restartGame("You have been defeated...GAME OVER!!!");
+        $("#attack-button").unbind("click");
+        }
+    } else {
+        renderCharacters(currDefender, 'enemyDefeated');
+        killCount++;
+
+        if (killCount >= 3) {
+            renderMessage("clearMessage");
+            restartGame("You Won!!!! GAME OVER!!!");
+        }
+    }
+    turnCounter++;
+} else {
+    renderMessage("clearMessage");
+    renderMessage("No enemy here.");
+}
+});
+
+
+//need a function restart the game
+const restartGame = function(inputEndGame) {
+    const restart = $('<button class="btn">Restart</button>').click(function() {
+      location.reload();
+    });
+    const gameState = $("<div>").text(inputEndGame);
+    $("#gameMessage").append(gameState);
+    $("#gameMessage").append(restart);
+  };
+
+});

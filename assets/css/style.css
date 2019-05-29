@@ -46,6 +46,7 @@ header {
     margin-left: auto;
     margin-right: auto;
     height: 200px;
+    width: 150px;
 }
   
 .character-name {
@@ -73,6 +74,11 @@ header {
   
 #attack-button{
     visibility: hidden;
+    background-color: yellow;
+}
+
+#attack-button:hover{
+    background-color: red;
 }
   
 .btn {
@@ -107,7 +113,7 @@ header {
     float: right;
 }
 
-#targets-section img {
+#atargets-section img {
     height: 100px;
 }  
 
@@ -125,3 +131,4 @@ header {
 #defender-health {
     text-align: center;
 }
+
