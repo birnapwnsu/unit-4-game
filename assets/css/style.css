@@ -2,10 +2,26 @@ body {
     background-color: #C2C3C7;
 }
 
-header {
-    font-size: 50px;
-    text-align: center;
-    padding: 20px;
+#header {
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 1.5%;
+    width: 50%;
+    display:block;
+}
+
+#background {
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.container {
+    background-color: #C2C3C7;
+    padding: 5px;
 }
   
 .characterWrapper {
@@ -16,7 +32,7 @@ header {
   
 #gameMessage {
     text-align: center;
-    font-size: 10px;
+    font-size: 12px;
 }
   
 #choose-enemy-button {
