@@ -13,9 +13,36 @@
     <header>
     </header>   
     
-
-
-
+    <div class="container" id="main-game-section">
+    <!--container for character section-->
+    <div class="container col-lg-12" id="characters-section">
+        <div class="container section-title">Select Your Character</div>
+    </div>
+    <!--container for selected character-->
+    <div class="container col-lg-4" id="selected-section">
+        <div class="section-title container"></div>
+        <div id="selected"></div>
+    </div>
+    <!--container for offensive attack-->
+    <div class="section-title container col-lg-4">Fight Section
+        <div id="fight-section">
+            <button class="btn" id="attack-button">Attack</button>
+            <!--display results of attack-->
+            <div class="jumbotron" id="gameMessage"></div>
+        </div>   
+    </div>	
+        <div id="action">
+            <div class="character-section">
+                <!--container for defender-->
+                <div class="container section-title col-lg-3">
+                    <div id="defender"></div>
+                </div>	
+            </div>
+        </div>    
+        <!--container for targets available-->
+    <div class="container" id="targets-section">
+        <div class="section-title"></div>
+    </div>
 
     <script type="text/javascript" src="assets/javascript/game.js"></script>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
